@@ -33,7 +33,7 @@ class ParserData:
         else :
             if not args.list:
                 #parser.echo()
-                sys.stderr.write('You need to specify at least -i or -l option!\n\nRun PhoneInformationTracer.py -h for more help\n')
+                sys.stderr.write('Nicht genuegend Informationen vorhanden! Bitte benutze -i oder -l um dieses Tool vollständig benutzen zu können!\n\n')
                 exit()
             self.list = True
             self.phoneNumbers = args.list
@@ -41,22 +41,22 @@ class ParserData:
         if args.country_code is not None:
             self.countryCode = args.country_code
         else :
-            self.countryCode = '+30'
+            self.countryCode = '+43'
  
 
     def configureParser(self):
         parser = argparse.ArgumentParser(prog='PhoneInformationTracer.py')
-        parser.add_argument('-i', '--input', help='The Phone Number imput to Examine')
-        parser.add_argument('-cc', '--country-code', help='The Country Code, Default=+30 (GR)')
-        parser.add_argument('-v', '--verbose', action='store_true', help='increase output verbosity')
-        parser.add_argument('-l', '--list', help='Specify a phone list to enumerate')
-        parser.add_argument('-o', '--output', help='Specify a file to export the data')
+        parser.add_argument('-i', '--input', help='Telefonnummer')
+        parser.add_argument('-cc', '--country-code', help='Laendervorwahl (Standard ist +43)')
+        parser.add_argument('-v', '--verbose', action='store_true', help='Genauere Ausgabe')
+        parser.add_argument('-l', '--list', help='Liste an Nummern')
+        parser.add_argument('-o', '--output', help='Ergebnis in eine Datei speichern')
         return parser
 
     def print_banner(self):
         printBannerPadding('*')
-        printMessage("Welcome to Phone Information Tracer")
-        printMessage("By Konstantinos Pap")
+        printMessage("Willkommen zum Phonetracing Tool")
+        printMessage("Created by Konstantinos Pap | Modifiziert von 0xj0n1")
         printBannerPadding('*')
 
 
@@ -98,10 +98,10 @@ def ExamineNumber(phoneNumber, countryCode, verbosity=False):
     timezone_info = timezone.time_zones_for_number(meta)
     if timezone_info is not None and not timezone_info == "":
         if verbosity:
-            print(f'{bcolors.BOLD} Success {bcolors.ENDC}')
-        print(f'{bcolors.BOLD}Timezone: ', timezone_info, f'{bcolors.ENDC}\n')
+            print(f'{bcolors.BOLD} Erfolgreich {bcolors.ENDC}')
+        print(f'{bcolors.BOLD}Zeitzone: ', timezone_info, f'{bcolors.ENDC}\n')
     else:
-        timezone_info = "Could Not Be Traced"
+        timezone_info = "Konnte nicht zurückverfolgt werden!"
         print(f'{bcolors.FAIL}Timezone could not be Traced!{bcolors.ENDC}\n')
 
     return area, carrier_info, timezone_info
@@ -114,14 +114,14 @@ if __name__ == "__main__":
         a, c, t = ExamineNumber(data.phoneNumber, data.countryCode, data.verbosity)
         if data.outputfile is not None:
            with open(data.outputfile, 'w') as f:
-               f.write('Number\t\t: Area\t | Carrier\t | timezone\n')
+               f.write('Nummer\t\t: Land\t | Anbieter\t | Zeitzone\n')
                f.write(f'{data.phoneNumber}\t: {a}\t | {c}\t | {t}\n')
     else:
         if data.outputfile is None:
             sys.stderr.write('-l flag requires -o flag as well\n')
             exit()
         with open(data.outputfile, 'w') as of:
-            of.write('Number\t\t: Area\t | Carrier\t | timezone\n')
+            of.write('Nummer\t\t: Land\t | Anbieter\t | Zeitzone\n')
             with open(data.phoneNumbers, 'r') as ifl:
                 lines = ifl.read()
             lines = lines.split('\n')
@@ -138,7 +138,7 @@ if __name__ == "__main__":
                     of.write(f'{number}\t: {a}\t | {c}\t | {t}\n')
 
     if data.verbosity:
-        print(f'{bcolors.BOLD}Information Trace Completed Successfully!{bcolors.ENDC}')
+        print(f'{bcolors.BOLD}Tracing erfolgreich!{bcolors.ENDC}')
 
 
 
